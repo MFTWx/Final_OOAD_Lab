@@ -1,0 +1,53 @@
+package controller;
+
+import java.util.ArrayList;
+
+import model.Item;
+import model.User;
+
+public class ItemController {
+	
+	private static ItemController ic = null;
+	private Item itemModel;
+	
+	ArrayList<Item> allItem;
+	
+	private ItemController() {
+		itemModel = new Item();
+		allItem = new ArrayList<Item>();
+		allItem = itemModel.getAllItem();
+	}
+	
+	public static ItemController getInstance() {
+		if(ic == null) {
+			ic = new ItemController();
+		}
+		return ic;
+	}
+	
+	public ArrayList<Item> ViewRequestedItem() {
+		ArrayList<Item> requestedItem = new ArrayList<Item>();
+		
+		for(Item item : allItem) {
+			if(item.getItem_status().equals("Pending")) {
+				requestedItem.add(item);
+			}
+		}
+		
+		return requestedItem;	
+	}
+//	
+//	public void ViewAcceptedItem(String Item_id) {
+//		
+//	}
+//	
+	public void ApproveItem(Item_id) {
+		for(Item item : allItem) {
+			if(item.getItem_id() == Item_id) {
+				
+			}
+		}
+	}
+	
+	
+}

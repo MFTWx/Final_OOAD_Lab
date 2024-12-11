@@ -1,0 +1,119 @@
+package view.admin;
+
+import javafx.application.Application;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class DeclineItemView extends Application {
+
+    private Scene sc;
+    private BorderPane bp;
+    private GridPane gpForm;
+    private VBox vbMain;
+    private HBox hbButtons;
+
+    private Label titleLabel, colonLabel1, reasonLabel;
+    private TextField reasonField;
+
+    private Button submitButton, backButton;
+
+    private void initialize() {
+        // Initialize containers
+        bp = new BorderPane();
+
+        gpForm = new GridPane();
+        vbMain = new VBox(20);
+        hbButtons = new HBox(10);
+
+        // Initialize components
+        titleLabel = new Label("Decline Item Form");
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
+        reasonLabel = new Label("Reason");
+
+        colonLabel1 = new Label(":");
+
+        reasonField = new TextField();
+        reasonField.setPromptText("Enter reason for declining");
+
+        submitButton = new Button("Submit");
+        submitButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 8 20;");
+
+        backButton = new Button("Back to Home Page");
+        backButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-padding: 8 20;");
+    }
+
+    private void layouting() {
+        gpForm.setHgap(10);
+        gpForm.setVgap(15);
+        gpForm.setPadding(new Insets(20));
+        gpForm.setAlignment(Pos.CENTER);
+
+        gpForm.add(reasonLabel, 0, 0);
+        gpForm.add(colonLabel1, 1, 0);
+        gpForm.add(reasonField, 2, 0);
+
+        double buttonWidth = 150;
+        submitButton.setPrefWidth(buttonWidth);
+        backButton.setPrefWidth(buttonWidth);
+
+        VBox vbButtons = new VBox(10);
+        vbButtons.getChildren().addAll(submitButton, backButton);
+        vbButtons.setAlignment(Pos.CENTER);
+
+        vbMain.getChildren().clear();
+        vbMain.getChildren().addAll(titleLabel, gpForm, vbButtons);
+        vbMain.setAlignment(Pos.CENTER);
+        vbMain.setPadding(new Insets(30));
+
+        bp.setCenter(vbMain);
+
+        sc = new Scene(bp, 400, 300);
+    }
+    
+    private void setAction() {
+    	submitButton.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				// TODO Auto-generated method stub
+				
+			}
+    		
+		});
+    	
+    	backButton.setOnMouseClicked(new EventHandler<Event>(){
+
+			@Override
+			public void handle(Event event) {
+				// TODO Auto-generated method stub
+				
+			}
+    		
+    	});
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        initialize();
+        layouting();
+
+        // Set the Scene to the Stage
+        primaryStage.setScene(sc);
+        primaryStage.setTitle("Admin Item Management (Decline Form)");
+        primaryStage.show();
+    }
+
+}

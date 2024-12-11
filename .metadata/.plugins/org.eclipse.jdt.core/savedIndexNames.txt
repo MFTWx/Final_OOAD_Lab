@@ -1,0 +1,13 @@
+INDEX VERSION 1.134+D:\Kuliah\Semester 5\OOAD\Lab\Final Project\.metadata\.plugins\org.eclipse.jdt.core
+3528358667.index
+4176058494.index
+519117457.index
+2998068609.index
+2425269622.index
+953239880.index
+2878277807.index
+1865797976.index
+2132831890.index
+2035632698.index
+3819940618.index
+3593364991.index

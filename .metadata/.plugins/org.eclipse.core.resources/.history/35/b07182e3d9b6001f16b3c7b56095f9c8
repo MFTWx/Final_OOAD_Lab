@@ -1,0 +1,44 @@
+package connection;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Database {
+	
+	private String host = "localhost";
+	private String port = "3306";
+	private String dbName = "calouseif";
+	private String username = "root";
+	private String password = "";
+	
+	private static Database instance = null;
+	
+	private Connection conn;
+	
+	private Database() {
+		String url = String.format("jdbc:mysql://%s:%s/%s", host, port, dbName);
+		try {
+			this.conn = DriverManager.getConnection(url, username, password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Connection getConnection() {
+		return this.conn;
+	}
+	
+	public static Database getInstance() {
+		if(instance == null) {
+			instance = new Database();
+		}
+		
+		return instance;
+	}
+	
+
+}

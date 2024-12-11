@@ -1,0 +1,13 @@
+/**
+ * 
+ */
+/**
+ * 
+ */
+module CaLouseIF {
+	requires java.sql;
+	opens main;
+	opens connection;
+	opens controller;
+	opens view;
+}

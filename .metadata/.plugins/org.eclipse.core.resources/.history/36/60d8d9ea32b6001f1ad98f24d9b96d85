@@ -1,0 +1,9 @@
+package model;
+
+public class Transaction {
+	private String User_id;
+	private String Item_id;
+	private String transaction_id;
+	
+	
+}

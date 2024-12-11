@@ -1,0 +1,12 @@
+package model;
+
+public class Item {
+	private String Item_id;
+	private String Item_name;
+	private String Item_size;
+	private String Item_price;
+	private String Item_category;
+	private String Item_status;
+	private String Item_wishlist;
+	private String Item_offer_status;
+}

@@ -1,0 +1,11 @@
+module CaLouseIF {
+	requires java.sql;
+	requires javafx.graphics;
+	requires javafx.controls;
+	requires javafx.base;
+	requires java.base;
+	opens main;
+	opens connection;
+	opens controller;
+	opens view;
+}
