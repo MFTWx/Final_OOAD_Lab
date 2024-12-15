@@ -109,7 +109,28 @@ public class Item {
 	//CRUD
 	
 	// CREATE
-	
+	public boolean createItem(String User_id, String Item_name,  String Item_size,  String Item_price, String Item_category, String Item_status, String Item_wishlist, String Item_offer_status) {
+		String query = "INSERT INTO `item`(`Item_id`, `Item_name`, `Item_size`, `Item_price`, `Item_category`, `Item_status`, `Item_wishlist`, `Item_offer_status`, `User_id`) VALUES (?,?,?,?,?,?,?,?,?)";
+		PreparedStatement ps = Connect.getConnection().prepareStatement(query);
+		String Item_id = "id_" + System.currentTimeMillis();
+		
+		try {
+			ps.setString(1, Item_id);
+			ps.setString(2, Item_name);
+			ps.setString(3,  Item_size);
+			ps.setString(4, Item_price);
+			ps.setString(5, Item_category);
+			ps.setString(6, Item_status);
+			ps.setString(7, Item_wishlist);
+			ps.setString(8, Item_offer_status);
+			ps.setString(9, User_id);
+			return ps.executeUpdate() == 1;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	// READ
 	public ArrayList<Item> getAllItem(){
 		ArrayList<Item> items = new ArrayList<Item>();
@@ -134,8 +155,77 @@ public class Item {
 		return items;
 	}
 	
-	// UPDATE
+	public ArrayList<Item> getSellerItem(String User_id){
+		ArrayList<Item> items = new ArrayList<Item>();
+		String query = "SELECT * FROM item WHERE User_id = ?";
+		PreparedStatement statement = Connect.getConnection().prepareStatement(query);
+	   
+		try {
+			statement.setString(1, User_id);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				String id = rs.getString("Item_id");
+				String userId = rs.getString("User_id");
+				String name = rs.getString("Item_name");
+				String size = rs.getString("Item_size");
+				String price = rs.getString("Item_price");
+				String category = rs.getString("Item_category");
+				String status = rs.getString("Item_status");
+				String wishlist = rs.getString("Item_wishlist");
+				String offerStatus = rs.getString("Item_offer_status");
+				items.add(new Item(id, userId, name, size, price, category, status, wishlist, offerStatus));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return items;
+	}
 	
+	public ArrayList<Item> getApprovedItem(String User_id){
+		ArrayList<Item> items = new ArrayList<Item>();
+		String query = "SELECT * FROM item WHERE User_id = ? AND Item_status = 'Accepted'";
+		PreparedStatement statement = Connect.getConnection().prepareStatement(query);
+	   
+		try {
+			statement.setString(1, User_id);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				String id = rs.getString("Item_id");
+				String userId = rs.getString("User_id");
+				String name = rs.getString("Item_name");
+				String size = rs.getString("Item_size");
+				String price = rs.getString("Item_price");
+				String category = rs.getString("Item_category");
+				String status = rs.getString("Item_status");
+				String wishlist = rs.getString("Item_wishlist");
+				String offerStatus = rs.getString("Item_offer_status");
+				items.add(new Item(id, userId, name, size, price, category, status, wishlist, offerStatus));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return items;
+	}
+	// UPDATE
+	public boolean updateItem(String Item_id, String Item_name, String Item_category, String Item_size, String Item_price) {
+	    String query = "UPDATE `item` SET `Item_name` = ?, `Item_category` = ?, `Item_size` = ?, `Item_price` = ? WHERE `Item_id` = ?";
+	    PreparedStatement ps = Connect.getConnection().prepareStatement(query);
+
+	    try {
+	        ps.setString(1, Item_name);
+	        ps.setString(2, Item_category);
+	        ps.setString(3, Item_size);
+	        ps.setString(4, Item_price);
+	        ps.setString(5, Item_id);
+	        return ps.executeUpdate() == 1;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+	
+
 	// change atau update value dari kolom tertentu, 1 function buat semua
 	public boolean changeColumnValue(String columnName, String itemId, String newStatus) {
 	    String query = "UPDATE item SET " + columnName + " = ? WHERE Item_id = ?";

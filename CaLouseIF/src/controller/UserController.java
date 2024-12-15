@@ -10,6 +10,7 @@ public class UserController {
 	private static UserController uc = null;
 	private User userModel;
 	private ArrayList<User> allUser;
+	private User currentUser;
 	
 	private UserController() {
 		userModel = new User();
@@ -27,12 +28,16 @@ public class UserController {
 		allUser = userModel.getAllUser();
 	}
 	
+	public User getCurrentUser() {
+		return currentUser;
+	}
 	// function login
 	public Integer Login(String Username, String Password) {
 		initiateAllUser();
 		for(User user : allUser) {
 			if(user.getUsername().equals(Username) && user.getPassword().equals(Password)) {
 				System.out.println("Login successful");
+				currentUser = user;
 				if(user.getRole().equals("Buyer")) {
 					System.out.println("Buyer login");
 					return 1;
@@ -43,6 +48,7 @@ public class UserController {
 					System.out.println("Admin login");
 					return 3;
 				}
+				
 			}
 		}
 		System.out.println("Login failed");

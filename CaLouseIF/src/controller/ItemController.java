@@ -96,4 +96,76 @@ public class ItemController {
 		return false;
 	}
 	
+	// Seller Item Function
+	public ArrayList<Item> getSellerItem(String User_id){
+		return itemModel.getSellerItem(User_id);
+	}
+	
+	public ArrayList<Item> getApprovedItem(String User_id){
+		return itemModel.getApprovedItem(User_id);
+	}
+	
+	public boolean UploadItem(String User_id, String Item_name,  
+			String Item_size,  String Item_price, 
+			String Item_category, String Item_status, 
+			String Item_wishlist, String Item_offer_status) {
+		boolean validated = CheckItemValidation(Item_name, Item_category, Item_size, Item_price);
+		if(validated) {
+			boolean res = itemModel.createItem(User_id, Item_name, Item_size, Item_price, Item_category, Item_status, Item_wishlist, Item_offer_status);
+			if(res) {
+				System.out.println("Item created successfully!");
+				return true;
+			}else {
+			    System.out.println("Failed to create item.");
+			    return false;
+			}
+		}
+		return false;
+	}
+	
+	public boolean updateItem(String Item_id, String Item_name, String Item_category, String Item_size, String Item_price) {
+		boolean validated = CheckItemValidation(Item_name, Item_category, Item_size, Item_price);
+		if(validated) {
+			boolean res = itemModel.updateItem(Item_id, Item_name, Item_category, Item_size, Item_price);
+			if(res) {
+				System.out.println("Item update successfully!");
+				return true;
+			}else {
+			    System.out.println("Failed to update item.");
+			    return false;
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteItem(String Item_id) {
+		return itemModel.deleteItem(Item_id);
+	}
+	
+	public boolean CheckItemValidation(String Item_name, String Item_category, String Item_size, String Item_price) {
+		initiateAllItem();
+		ArrayList<String> Item_names = new ArrayList<String>();
+		
+		for (Item item : allItem) {
+			Item_names.add(item.getItem_name());
+		}
+		
+		if(Item_name.isEmpty() || Item_name.length() < 3) {
+			return false;
+		}else if(Item_category.isEmpty() || Item_category.length() < 3) {
+			return false;
+		}else if(Item_size.isEmpty()) {
+			return false;
+		}
+		
+		try {
+	        double price = Double.parseDouble(Item_price);
+	        if (price <= 0) {
+	            return false;
+	        }
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+		return true;
+	}
 }

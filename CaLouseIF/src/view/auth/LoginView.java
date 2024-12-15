@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import view.admin.AcceptedItemView;
 import view.admin.AdminHomePage;
+import view.seller.SellerHomeView;
 
 public class LoginView extends Application {
 	
@@ -123,7 +124,14 @@ public class LoginView extends Application {
 					//redirect seller
 					case 2: {
 						System.out.println("Seller Page");
-						//redirect functionnya disini
+						SellerHomeView sellerPage = new SellerHomeView();
+						Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+						try {
+							sellerPage.start(stage);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						break;
 					}
 					//redirect admin
