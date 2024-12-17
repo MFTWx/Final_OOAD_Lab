@@ -5,7 +5,9 @@ import javafx.stage.Stage;
 import view.admin.AdminHomePage;
 import view.admin.DeclineItemView;
 import view.admin.RequestedItemView;
+import view.auth.LoginView;
 import view.auth.RegisterView;
+import view.buyer.BuyerHomePage;
 
 public class Main extends Application {
 

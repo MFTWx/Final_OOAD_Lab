@@ -1,30 +1,44 @@
 package view.seller;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import controller.ItemController;
+import controller.TransactionController;
 import controller.UserController;
+import controller.WishlistController;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Item;
+import model.Transaction;
+import model.User;
 import view.auth.LoginView;
 
 public class SellerHomeView extends Application{
 	UserController controller = UserController.getInstance();
 	ItemController itemController = ItemController.getInstance();
+	TransactionController controllerT = TransactionController.getInstance();
+	WishlistController controllerW = WishlistController.getInstance();
+	
+	String currentUserId = controller.getCurrentUser().getUser_id();
 	
 	 Scene sc;
 	 BorderPane bp;
@@ -77,15 +91,141 @@ public class SellerHomeView extends Application{
         TableColumn<Item, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getItem_status()));
 
-        TableColumn<Item, String> wishlistColumn = new TableColumn<>("Wishlist");
+        TableColumn<Item, String> wishlistColumn = new TableColumn<>("Buyer");
         wishlistColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getItem_wishlist()));
 
         TableColumn<Item, String> offerStatusColumn = new TableColumn<>("Offer Status");
         offerStatusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getItem_offer_status()));
         
+        TableColumn<Item, Void> offerColumn = new TableColumn<>("Accept");
+        offerColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button acc = new Button("Accept");
+
+            {
+                acc.setStyle("-fx-background-color: #2196F3; -fx-text-fill: black; -fx-padding: 5px; -fx-pref-width: 80px;");
+                acc.setOnAction(event -> {
+                	Item item = getTableView().getItems().get(getIndex());
+                    Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmationAlert.setTitle("Confirm Offer");
+                    confirmationAlert.setHeaderText("Offer Confirmation");
+                    confirmationAlert.setContentText("Are you sure you want to accept this offer: " + item.getItem_offer_status() + "?");
+                    
+                    confirmationAlert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                        	Item selectedItem = getTableView().getItems().get(getIndex());
+                        	User user = new User();
+                        	user.setUser_id(selectedItem.getItem_wishlist());
+                        	
+                            boolean validated = controllerT.getInstance().PurchaseItems(user, item);
+                            if(validated) {
+                            	ArrayList<Transaction> controlledItem = controllerT.getInstance().ViewHistory(user.getUser_id());
+                            	for(Transaction items : controlledItem) {
+                            		if(items.getItem_id().equals(item.getItem_id())) {
+                            			ItemController.getInstance().PurchasedItem(item.getItem_id(), items.getTransaction_id());
+                            			ItemController.getInstance().AcceptOffer(item.getItem_id(), selectedItem.getItem_offer_status());
+                            			controllerW.getInstance().RemoveWishlist(item.getItem_id());
+                            		}
+                            	}
+                            	System.out.println("Item sold");
+                            	refreshTable();
+                            } else {
+                            	System.out.println("Offer failed");
+                            }
+                            refreshTable();
+                        } else {
+                            System.out.println("Offer canceled");
+                        }
+                    });
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (!empty) {
+                    Item currentItem = getTableView().getItems().get(getIndex());
+
+                    if (currentItem != null && currentItem.getItem_offer_status() != null) {
+                        String offerStatus = currentItem.getItem_offer_status();
+                        if (!offerStatus.contains("id_") && !offerStatus.isEmpty()) {
+                            setGraphic(acc);
+                        } else {
+                            setGraphic(null);
+                        }
+                    } else {
+                        setGraphic(null);
+                    }
+                    setAlignment(Pos.CENTER); 
+                } else {
+                    setGraphic(null);
+                }
+            }
+        });
+
+        TableColumn<Item, Void> declineColumn = new TableColumn<>("Decline");
+        declineColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button dec = new Button("Decline");
+            {
+                dec.setStyle("-fx-background-color: #FF0000; -fx-text-fill: black; -fx-padding: 5px; -fx-pref-width: 80px;");
+                dec.setOnAction(event -> {
+                	Item item = getTableView().getItems().get(getIndex());
+                	
+                	TextInputDialog inputDialog = new TextInputDialog();
+                    inputDialog.setTitle("Decline Offer");
+                    inputDialog.setHeaderText("Decline an offer for: " + item.getItem_name());
+                    inputDialog.setContentText("Enter reason:");
+
+                    Optional<String> result = inputDialog.showAndWait();
+                	
+                    result.ifPresent(reason -> {
+                    	if (reason.isEmpty()) {
+                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                            errorAlert.setTitle("Invalid Input");
+                            errorAlert.setHeaderText("Empty reason");
+                            errorAlert.setContentText("Reason cannot be empty.");
+                            errorAlert.showAndWait();
+                    	} else {
+                    		boolean validated = ItemController.getInstance().declineOffer(item.getItem_id());
+                            if(validated) {
+                            	System.out.println("Item declined");
+                            	refreshTable();
+                            } else {
+                            	System.out.println("Decline failed");
+                            }
+                            refreshTable(); 
+                    	}
+                    });
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (!empty) {
+                    Item currentItem = getTableView().getItems().get(getIndex());
+
+                    if (currentItem != null && currentItem.getItem_offer_status() != null) {
+                        String offerStatus = currentItem.getItem_offer_status();
+                        if (!offerStatus.contains("id_") && !offerStatus.isEmpty()) {
+                            setGraphic(dec);
+                        } else {
+                            setGraphic(null);
+                        }
+                    } else {
+                        setGraphic(null);
+                    }
+                    setAlignment(Pos.CENTER); 
+                } else {
+                    setGraphic(null);
+                }
+            }
+        });
+        
         itemTable.getColumns().addAll(
                 idColumn, userIdColumn, nameColumn, sizeColumn, priceColumn, 
-                categoryColumn, statusColumn, wishlistColumn, offerStatusColumn
+                categoryColumn, statusColumn, wishlistColumn, offerStatusColumn,
+                offerColumn, declineColumn
            );
 
         itemTable.setPrefHeight(400);
@@ -94,11 +234,11 @@ public class SellerHomeView extends Application{
         vbMain.setStyle("-fx-padding: 20px; -fx-alignment: center;");
 
         bp = new BorderPane(vbMain);
-        sc = new Scene(bp, 800, 600);
+        sc = new Scene(bp, 1000, 600);
     }
     
     private void setAction() {
-    	 String currentUserId = controller.getCurrentUser().getUser_id();
+    	 
          ArrayList<Item> items = itemController.getSellerItem(currentUserId);
          ObservableList<Item> observableItems = FXCollections.observableArrayList(items);
          itemTable.setItems(observableItems);
@@ -151,7 +291,11 @@ public class SellerHomeView extends Application{
          });
     }
     
-    
+    public void refreshTable(){
+    	ArrayList<Item> items = itemController.getSellerItem(currentUserId);
+        ObservableList<Item> observableItems = FXCollections.observableArrayList(items);
+        itemTable.setItems(observableItems);
+    }
     
 	public SellerHomeView() {
 		

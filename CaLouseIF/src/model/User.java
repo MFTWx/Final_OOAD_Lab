@@ -78,11 +78,11 @@ public class User {
 	//CRUD
 	
 	// CREATE
+	// create user in sql using preparedstatement
 	public boolean createUser(String Username, String Password, String Phone_number, String Address, String Role) {
 		String query = "INSERT INTO `user`(`User_id`, `Username`, `Password`, `Phone_Number`, `Address`, `Role`) VALUES (?,?,?,?,?,?)";
 		PreparedStatement ps = Connect.getConnection().prepareStatement(query);
-		String User_id = "id_" + System.currentTimeMillis();
-		
+		String User_id = "id_" + System.currentTimeMillis();	
 		try {
 			ps.setString(1, User_id);
 			ps.setString(2, Username);
@@ -98,8 +98,8 @@ public class User {
 		return false;
 	}
 	
-	
 	//READ
+	// read all user in sql and making a list to contain all new user class
 	public ArrayList<User> getAllUser(){
 		ArrayList<User> users = new ArrayList<User>();
 		String query = "SELECT * FROM user";

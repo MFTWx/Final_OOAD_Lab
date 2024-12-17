@@ -109,11 +109,11 @@ public class Item {
 	//CRUD
 	
 	// CREATE
+	// create item in sql using preparedstatement
 	public boolean createItem(String User_id, String Item_name,  String Item_size,  String Item_price, String Item_category, String Item_status, String Item_wishlist, String Item_offer_status) {
 		String query = "INSERT INTO `item`(`Item_id`, `Item_name`, `Item_size`, `Item_price`, `Item_category`, `Item_status`, `Item_wishlist`, `Item_offer_status`, `User_id`) VALUES (?,?,?,?,?,?,?,?,?)";
 		PreparedStatement ps = Connect.getConnection().prepareStatement(query);
-		String Item_id = "id_" + System.currentTimeMillis();
-		
+		String Item_id = "id_" + System.currentTimeMillis();	
 		try {
 			ps.setString(1, Item_id);
 			ps.setString(2, Item_name);
@@ -124,14 +124,15 @@ public class Item {
 			ps.setString(7, Item_wishlist);
 			ps.setString(8, Item_offer_status);
 			ps.setString(9, User_id);
-			return ps.executeUpdate() == 1;
-			
+			return ps.executeUpdate() == 1;		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
+	
 	// READ
+	// read all item and contain it in item list
 	public ArrayList<Item> getAllItem(){
 		ArrayList<Item> items = new ArrayList<Item>();
 		String query = "SELECT * FROM item";
@@ -155,11 +156,11 @@ public class Item {
 		return items;
 	}
 	
+	// read item where it is created by certain seller and contain it in item list using ps - seller
 	public ArrayList<Item> getSellerItem(String User_id){
 		ArrayList<Item> items = new ArrayList<Item>();
 		String query = "SELECT * FROM item WHERE User_id = ?";
-		PreparedStatement statement = Connect.getConnection().prepareStatement(query);
-	   
+		PreparedStatement statement = Connect.getConnection().prepareStatement(query);	   
 		try {
 			statement.setString(1, User_id);
 			ResultSet rs = statement.executeQuery();
@@ -181,11 +182,11 @@ public class Item {
 		return items;
 	}
 	
+	// read item where item status is accepted - buyer
 	public ArrayList<Item> getApprovedItem(String User_id){
 		ArrayList<Item> items = new ArrayList<Item>();
 		String query = "SELECT * FROM item WHERE User_id = ? AND Item_status = 'Accepted'";
-		PreparedStatement statement = Connect.getConnection().prepareStatement(query);
-	   
+		PreparedStatement statement = Connect.getConnection().prepareStatement(query);   
 		try {
 			statement.setString(1, User_id);
 			ResultSet rs = statement.executeQuery();
@@ -206,11 +207,12 @@ public class Item {
 		}
 		return items;
 	}
+	
 	// UPDATE
+	// update certain item - buyer
 	public boolean updateItem(String Item_id, String Item_name, String Item_category, String Item_size, String Item_price) {
 	    String query = "UPDATE `item` SET `Item_name` = ?, `Item_category` = ?, `Item_size` = ?, `Item_price` = ? WHERE `Item_id` = ?";
 	    PreparedStatement ps = Connect.getConnection().prepareStatement(query);
-
 	    try {
 	        ps.setString(1, Item_name);
 	        ps.setString(2, Item_category);
@@ -218,35 +220,29 @@ public class Item {
 	        ps.setString(4, Item_price);
 	        ps.setString(5, Item_id);
 	        return ps.executeUpdate() == 1;
-
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	    return false;
 	}
 	
-
 	// change atau update value dari kolom tertentu, 1 function buat semua
 	public boolean changeColumnValue(String columnName, String itemId, String newStatus) {
-	    String query = "UPDATE item SET " + columnName + " = ? WHERE Item_id = ?";
-	    
+	    String query = "UPDATE item SET " + columnName + " = ? WHERE Item_id = ?";	    
 	    try (PreparedStatement ps = Connect.getConnection().prepareStatement(query)) {
 	        ps.setString(1, newStatus);
 	        ps.setString(2, itemId);
-
 	        return ps.executeUpdate() == 1;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-
 	    return false;
 	}
 	
 	// DELETE
-	
+	// delete certain item - seller
 	public boolean deleteItem(String itemId) {
-		String query = "DELETE FROM `item` WHERE Item_id = ?";
-		
+		String query = "DELETE FROM `item` WHERE Item_id = ?";	
 		try (PreparedStatement ps = Connect.getConnection().prepareStatement(query)) {
 	        ps.setString(1, itemId);
 
@@ -254,8 +250,6 @@ public class Item {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-		
 		return false;
 	}
-	
 }

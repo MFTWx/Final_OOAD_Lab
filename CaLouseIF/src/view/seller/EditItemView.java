@@ -50,7 +50,7 @@ public class EditItemView extends Application {
         backButton.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
         currentUser = userController.getCurrentUser();
 
-        ArrayList<Item> sellerItems = itemController.getSellerItem(currentUser.getUser_id());
+        ArrayList<Item> sellerItems = itemController.getSellerItemUpdate(currentUser.getUser_id());
         itemDropdown.getItems().addAll(sellerItems);
         itemDropdown.setPromptText("Select an Item");
 

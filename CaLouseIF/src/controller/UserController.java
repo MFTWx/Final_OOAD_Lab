@@ -12,11 +12,13 @@ public class UserController {
 	private ArrayList<User> allUser;
 	private User currentUser;
 	
+	// singleton
 	private UserController() {
 		userModel = new User();
 		allUser = userModel.getAllUser();
 	}
 	
+	//singleton
 	public static UserController getInstance() {
 		if(uc == null) {
 			uc = new UserController();
@@ -24,13 +26,16 @@ public class UserController {
 		return uc;
 	}
 	
+	//initiate all user to always refresh data from sql
 	public void initiateAllUser(){
 		allUser = userModel.getAllUser();
 	}
 	
+	// to get current user data
 	public User getCurrentUser() {
 		return currentUser;
 	}
+	
 	// function login
 	public Integer Login(String Username, String Password) {
 		initiateAllUser();
@@ -48,7 +53,6 @@ public class UserController {
 					System.out.println("Admin login");
 					return 3;
 				}
-				
 			}
 		}
 		System.out.println("Login failed");
@@ -56,12 +60,9 @@ public class UserController {
 	}
 	
 	// function register dan validasinya
-	public boolean Register(String Username, String Password, String Phone_number, String Address, String Role) {
-		
+	public boolean Register(String Username, String Password, String Phone_number, String Address, String Role) {		
 		boolean validated = CheckAccountValidation(Username, Password, Phone_number, Address);
-		
-		if(validated) {
-						
+		if(validated) {						
 			boolean result = userModel.createUser(Username, Password, Phone_number, Address, Role);
 			if (result) {
 			    System.out.println("User created successfully!");
@@ -77,15 +78,12 @@ public class UserController {
 	}
 	
 	// function validation untuk register
-	public boolean CheckAccountValidation(String Username, String Password, String Phone_number, String Address) {
-		
+	public boolean CheckAccountValidation(String Username, String Password, String Phone_number, String Address) {	
 		initiateAllUser();
-		ArrayList<String> usernames = new ArrayList<String>();
-		
+		ArrayList<String> usernames = new ArrayList<String>();	
 		for(User user : allUser) {
 			usernames.add(user.getUsername());
-		}
-		
+		}		
 		if(Username.isEmpty() || Username.length() < 3) {
 			return false;
 		} else if(Password.isEmpty() || Password.length() < 8 || !Password.matches(".*[!@#$%^&*].*") ) {

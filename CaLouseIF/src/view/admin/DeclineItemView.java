@@ -17,8 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class DeclineItemView extends Application {
-	
-	// function controller item
 	ItemController controller = ItemController.getInstance();
 
 	private Scene sc;
@@ -31,7 +29,6 @@ public class DeclineItemView extends Application {
 
 	private Button submitButton, backButton;
 
-	// Item details
 	private String Item_id;
 	private String Item_name;
 	private String Item_size;
@@ -66,9 +63,7 @@ public class DeclineItemView extends Application {
 	    backButton = new Button("Back to HomePage");
 	}
 
-	// Layout the components
 	private void layouting() {
-	    // Item Info Layout
 	    gpItemInfo.setHgap(10);
 	    gpItemInfo.setVgap(5);
 	    gpItemInfo.setPadding(new Insets(10));
@@ -80,7 +75,6 @@ public class DeclineItemView extends Application {
 	    addItemInfoRow(gpItemInfo, "Item Price", Item_price, 3);
 	    addItemInfoRow(gpItemInfo, "Item Category", Item_category, 4);
 
-	    // Form Layout
 	    gpForm.setHgap(10);
 	    gpForm.setVgap(15);
 	    gpForm.setPadding(new Insets(20));
@@ -89,7 +83,6 @@ public class DeclineItemView extends Application {
 	    gpForm.add(reasonLabel, 0, 0);
 	    gpForm.add(reasonField, 1, 0, 2, 1);
 
-	    // Buttons
 	    VBox vbButtons = new VBox(10);
 	    submitButton.setPrefWidth(120);
 	    submitButton.setPrefHeight(30);
@@ -99,7 +92,6 @@ public class DeclineItemView extends Application {
 	    vbButtons.getChildren().addAll(submitButton, backButton);
 	    vbButtons.setAlignment(Pos.CENTER);
 
-	    // Main layout
 	    vbMain.getChildren().clear();
 	    vbMain.getChildren().addAll(titleLabel, gpItemInfo, gpForm, vbButtons);
 	    vbMain.setAlignment(Pos.TOP_CENTER);
@@ -131,11 +123,9 @@ public class DeclineItemView extends Application {
 				// validasi berhasil + deleted
 				if(validated) {
 					//pindah view
-					System.out.println("Redirecting to View Requested Item...");
-	                
+					System.out.println("Redirecting to View Requested Item...");	           
 	                try {
 	                    RequestedItemView reqView = new RequestedItemView();
-
 	                    Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
 	                    reqView.start(stage);
 	                } catch (Exception e) {
@@ -148,12 +138,10 @@ public class DeclineItemView extends Application {
 		});
     	
     	backButton.setOnMouseClicked(new EventHandler<Event>(){
-
 			@Override
 			public void handle(Event event) {
 				// TODO Auto-generated method stub
-				System.out.println("Redirecting to View Requested Item...");
-                
+				System.out.println("Redirecting to View Requested Item...");                
                 try {
                     RequestedItemView reqView = new RequestedItemView();
 
@@ -188,7 +176,6 @@ public class DeclineItemView extends Application {
         layouting();
         setAction();
 
-        // Set the Scene to the Stage
         primaryStage.setScene(sc);
         primaryStage.setTitle("Admin Item Management (Decline Form)");
         primaryStage.show();

@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 import model.Item;
 
 public class RequestedItemView extends Application{
-	
 	// panggil controllernya - item
 	ItemController controller = ItemController.getInstance();
 	

@@ -20,23 +20,20 @@ import model.Item;
 
 public class AcceptedItemView extends Application {
 
-ItemController controller = ItemController.getInstance();
+	ItemController controller = ItemController.getInstance();
 	
 	Scene sc;
     BorderPane bpMain;
-
     TableView<Item> itemTable;
-    
     ArrayList<Item> itemList;
     ObservableList<Item> itemListShow;
     
     public AcceptedItemView() {
     	itemList = new ArrayList<Item>();
     	// ngambil item status accepted
-    	itemList = controller.getInstance().ViewAcceptedItem();
+    	itemList = controller.getInstance().ViewAdminItem();
     	itemListShow = FXCollections.observableArrayList(itemList);
     }
-    
     
     TableColumn<Item, String> idColumn;
     TableColumn<Item, String> nameColumn;
@@ -49,9 +46,9 @@ ItemController controller = ItemController.getInstance();
     
     private void initialize() {
         bpMain = new BorderPane();
-
+        
         itemTable = new TableView<>();
-
+        
         idColumn = new TableColumn<>("Item ID");
         nameColumn = new TableColumn<>("Item Name");
         sizeColumn = new TableColumn<>("Item Size");
@@ -85,15 +82,12 @@ ItemController controller = ItemController.getInstance();
     }
     
     private void setAction() {
-    	
     	itemTable.setItems(itemListShow);
-    	
-        backButton.setOnMouseClicked(event -> {
-        	System.out.println("Redirecting to Admin HomePage...");
-            
+	
+        backButton.setOnMouseClicked(event -> { // redirect ke admin homepage
+        	System.out.println("Redirecting to Admin HomePage...");            
             try {
                 AdminHomePage adminHome = new AdminHomePage();
-
                 Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                 adminHome.start(stage);
             } catch (Exception e) {

@@ -48,7 +48,6 @@ public class AdminHomePage extends Application{
         viewAcceptedButton.setPrefWidth(200); 
         viewAcceptedButton.setPrefHeight(40);
         
-    
         logoutLink = new Hyperlink("Done with your work? Click here to log out.");
         logoutLink.setStyle("-fx-text-fill: #007BFF; -fx-font-size: 12px;");
 	}
@@ -64,11 +63,9 @@ public class AdminHomePage extends Application{
     	viewRequestedButton.setOnMouseClicked(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                System.out.println("Redirecting to View Requested Item...");
-                
+                System.out.println("Redirecting to View Requested Item...");           
                 try {
                     RequestedItemView reqView = new RequestedItemView();
-
                     Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                     reqView.start(stage);
                 } catch (Exception e) {
@@ -79,7 +76,7 @@ public class AdminHomePage extends Application{
 
         viewAcceptedButton.setOnMouseClicked(new EventHandler<Event>() {
             @Override
-            public void handle(Event event) {
+            public void handle(Event event) { // redirect ke accepted item
                 System.out.println("Redirecting to View Accepted Item...");
                 try {
                     AcceptedItemView acceptedView = new AcceptedItemView();
@@ -92,8 +89,8 @@ public class AdminHomePage extends Application{
             }
         });
         
-        logoutLink.setOnMouseClicked(event -> {
-            System.out.println("Redirecting to Register Form...");
+        logoutLink.setOnMouseClicked(event -> { // redirect ke login form
+            System.out.println("Redirecting to Login Form...");
             try {
                 LoginView loginView = new LoginView();
 

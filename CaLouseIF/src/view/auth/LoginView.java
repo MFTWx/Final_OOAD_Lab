@@ -19,8 +19,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.User;
 import view.admin.AcceptedItemView;
 import view.admin.AdminHomePage;
+import view.buyer.BuyerHomePage;
 import view.seller.SellerHomeView;
 
 public class LoginView extends Application {
@@ -114,11 +116,21 @@ public class LoginView extends Application {
                     
                     alert.showAndWait();
                 }else {
+                	User user = new User();
+                	user = controller.getInstance().getCurrentUser();
+                	
                 	switch (validation) {
                 	//redirect buyer
 					case 1: {
 						System.out.println("Buyer Page");
-						//redirect functionnya disini
+						BuyerHomePage buyerPage = new BuyerHomePage();
+						Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+						try {
+							buyerPage.start(stage);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						break;
 					}
 					//redirect seller
