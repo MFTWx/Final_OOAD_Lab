@@ -10,4 +10,6 @@ module CaLouseIF {
 	opens controller;
 	opens view.admin;
 	opens view.auth;
+	opens view.buyer;
+	opens view.seller;
 }
